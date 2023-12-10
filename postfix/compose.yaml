@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+    postfix:
+        container_name: postfix
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+          - ./config/main.cf:/etc/postfix/main.cf
+          - ./config/virtual:/etc/postfix/virtual
+        ports:
+          - "25:25"
+        networks:
+            mail_net:
+                ipv4_address: 172.20.0.10
+        dns:
+          - 172.20.0.9
+
+networks:
+    mail_net:
+        external: true

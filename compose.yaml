@@ -1,0 +1,50 @@
+version: "3.7"
+services:
+    bind9:
+        build: ./bind9/
+        image: bind9:custom
+        container_name: bind9
+        networks:
+            mail_net:
+                ipv4_address: 172.20.0.9
+        dns:
+          - 172.20.0.9
+        ports:
+          - 53:53
+    postfix:
+        build: ./postfix/
+        image: postfix:custom
+        container_name: postfix
+        networks:
+            mail_net:
+                ipv4_address: 172.20.0.10
+        dns:
+          - 172.20.0.9
+        ports:
+          - 25:25
+          - 110:110
+    alice:
+        build: ./client/
+        image: client:custom
+        container_name: alice
+        networks:
+            mail_net:
+                ipv4_address: 172.20.0.11
+        dns:
+          - 172.20.0.9
+    bob:
+        build: ./client/
+        image: client:custom
+        container_name: bob
+        networks:
+            mail_net:
+                ipv4_address: 172.20.0.12
+        dns:
+          - 172.20.0.9
+networks:
+    mail_net:
+        name: mail_net
+        ipam:
+            driver: default
+            config:
+              - subnet: "172.20.0.0/16" 

@@ -1,0 +1,13 @@
+options {
+    forwarders {
+        8.8.8.8;
+    };
+
+    listen-on port 53 { any; };
+
+    dnssec-validation no;
+    auth-nxdomain no;
+    allow-transfer { 127.0.0.1; };
+    allow-query { 127.0.0.1; 172.20.0.0/16; };
+    listen-on-v6 { any; };
+};

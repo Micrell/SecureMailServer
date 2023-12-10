@@ -1,0 +1,6 @@
+zone "pware.home" {
+    type master;
+    file "/etc/bind/db.pware.home";
+};
+
+
