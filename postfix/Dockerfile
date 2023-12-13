@@ -1,7 +1,9 @@
 FROM ubuntu:latest
 
 RUN useradd -m -s /bin/bash alice
+RUN echo 'alice:alice' | chpasswd
 RUN useradd -m -s /bin/bash bob
+RUN echo 'bob:bob' | chpasswd
 
 # Install service
 RUN apt-get update -y && apt-get upgrade -y
@@ -17,11 +19,9 @@ EXPOSE 25
 
 RUN apt-get install -y dovecot-pop3d dovecot-imapd dovecot-core dovecot-antispam
 
-RUN sed -i 's/\(disable_plaintext_auth = \)yes/\1no/' /etc/dovecot/conf.d/10-auth.conf
-
-RUN service dovecot start
+RUN sed -i 's/#disable_plaintext_auth = yes/disable_plaintext_auth = no/' /etc/dovecot/conf.d/10-auth.conf
 
 EXPOSE 110
 
-CMD ["postfix", "start-fg"]
-
+# CMD ["postfix", "start-fg"]
+CMD service dovecot start && postfix start-fg
